@@ -1,10 +1,15 @@
-import os
-from dotenv import load_dotenv
+"""
+Loads the app.
+"""
 
+import os
+import json
+
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask import Flask, request
 from bson import json_util, ObjectId
-import json
+
 
 app = Flask(__name__)
 
@@ -14,6 +19,9 @@ client = MongoClient(MONGODB_URI)
 
 @app.route('/', methods=['GET'])
 def default_route():
+    """
+    Returns a string
+    """
     return 'Landing page for to-do-list project'
 
 @app.route('/get-all', methods=['GET'])
@@ -32,7 +40,7 @@ def get_all_reminders():
     for document in cursor:
         document_cleaned = json.loads(json_util.dumps(document))
         result.append(document_cleaned)
-    return result    
+    return result
 
 @app.route('/get-one', methods=['GET'])
 def get_one_reminder():
@@ -79,7 +87,7 @@ def add_reminder():
     if "title" in new_reminder and "completed" in new_reminder:
         result = reminders_collection.insert_one(new_reminder)
         return f"_id of inserted document: {result.inserted_id}"
-    return f"missing \"title\" or \"completed\""
+    return "missing \"title\" or \"completed\""
 
 @app.route('/update', methods=['PUT'])
 def edit_reminder():
@@ -106,11 +114,10 @@ def edit_reminder():
 
     reminder_to_update = {"_id": ObjectId(oid)}
     updates = request.get_json()
-    
+
     result = reminders_collection.update_one(reminder_to_update, {"$set": updates})
 
     return f"Documents updated: {str(result.modified_count)}"
-
 
 @app.route('/remove', methods=['DELETE'])
 def remove_reminder():
