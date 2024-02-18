@@ -26,12 +26,12 @@ def default_route():
 
 @app.route('/get-all', methods=['GET'])
 def get_all_reminders():
-    """Gets all tasks.
+    """Gets all date entries.
 
     Returns
     -------
     dict
-        Details of all tasks.
+        Details of all date entries.
     """
     db = client.todolist
     reminders_collection = db.reminders_test
@@ -44,17 +44,17 @@ def get_all_reminders():
 
 @app.route('/get-one', methods=['GET'])
 def get_one_reminder():
-    """Gets a task.
+    """Gets a date entry.
 
     Query Parameter
     ----------
     oid: str
-        Task _id
+        date entry _id
 
     Returns
     -------
     dict
-        Details of task.
+        Details of date entry.
     """
     oid = request.args.get('oid')
     db = client.todolist
@@ -65,12 +65,12 @@ def get_one_reminder():
 
 @app.route('/add', methods=['POST'])
 def add_reminder():
-    """Adds a task.
+    """Adds a date entry.
 
     Request Body
     ----------
     application/json
-        JSON object with task fields:
+        JSON object with date entry fields:
             "title": str
             "completed": bool
 
@@ -91,12 +91,12 @@ def add_reminder():
 
 @app.route('/update', methods=['PUT'])
 def edit_reminder():
-    """Updates a task.
+    """Updates a date entry.
 
     Query Parameters
     ----------
     oid: str
-        id_ of task to update.
+        id_ of date entry to update.
 
     Request Body
     ----------
@@ -121,12 +121,12 @@ def edit_reminder():
 
 @app.route('/remove', methods=['DELETE'])
 def remove_reminder():
-    """Deletes a task.
+    """Deletes a date entry.
 
     Query Parameters
     ----------
     oid: str
-        id_ of task to delete.
+        id_ of date entry to delete.
 
     Returns
     -------
