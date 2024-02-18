@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "todo-list"
+name = "dates-in-sg"
 version = "0.1.0"
 description = ""
 authors = ["Bryan Ang <bryanang2001@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.11"
 routes = "^2.5.1"
 flask = "^3.0.0"
 pymongo = "^4.6.1"
