@@ -180,5 +180,39 @@ def add_date_review():
     return f"Reviews added: {str(result.modified_count)}"
 
 
+@app.route('/update-review', methods=['PUT'])
+def update_date_review():
+    """
+    Adds a review to a specified date entry.
+
+    Query Parameters
+    ----------
+    oid: str
+        id_ of date entry to update.
+
+    Request Body
+    ----------
+    application/json
+        JSON object formatted according to the schema
+
+    Returns
+    -------
+    str
+        Number of documents updated.
+    """
+    db = client["dates-in-sg"]
+    dates_collection = db.dates
+
+    oid = request.args.get("oid")
+    user_id = request.args.get("uid")
+    date_review = request.get_json()
+    date_review = dict(date_review)
+    date_review["date_added"] = datetime.datetime.now()
+    date_to_review = {"_id": ObjectId(oid), "reviews.user_id": user_id}
+    result = dates_collection.update_one(date_to_review,
+                                         {'$set': {'reviews.$': date_review}})
+    return f"Reviews modified: {str(result.modified_count)}"
+
+
 if __name__ == "__main__":
     app.run()
