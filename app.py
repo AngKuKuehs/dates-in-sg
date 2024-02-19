@@ -174,6 +174,38 @@ def remove_date_entry():
     result = dates_collection.delete_one(document_to_delete)
     return f"Documents deleted: {str(result.deleted_count)}"
 
+@app.route('/add-review', methods=['PUT'])
+def add_date_review():
+    """
+    Adds a review to a specified date entry.
+
+    Query Parameters
+    ----------
+    oid: str
+        id_ of date entry to update.
+
+    Request Body
+    ----------
+    application/json
+        JSON object formatted according to the schema
+
+    Returns
+    -------
+    str
+        Number of documents updated.
+    """
+    db = client["dates-in-sg"]
+    dates_collection = db.dates
+
+    oid = request.args.get('oid')
+    date_review = request.get_json()
+    date_review = dict(date_review)
+    date_review["date_added"] = datetime.datetime.now()
+    date_to_review = {"_id": ObjectId(oid),}
+    result = dates_collection.update_one(date_to_review,
+                                         {'$push': {'reviews': date_review}})
+    return f"Reviews added: {str(result.modified_count)}"
+
 
 if __name__ == "__main__":
     app.run()
