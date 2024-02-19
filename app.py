@@ -1,3 +1,4 @@
+# TODO: Validate add/update against schema
 """
 Loads the app.
 """
@@ -10,7 +11,6 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from flask import Flask, request
 from bson import json_util, ObjectId
-
 
 app = Flask(__name__)
 
@@ -45,7 +45,7 @@ def get_all_dates():
     return result
 
 @app.route("/get-one", methods=["GET"])
-def get_one_reminder():
+def get_one_date():
     """
     Gets a date entry.
 
@@ -67,7 +67,7 @@ def get_one_reminder():
     return json.loads(json_util.dumps(result))
 
 @app.route("/add-date", methods=["POST"])
-def add_date_entry():
+def add_date():
     """
     Adds a date entry.
 
@@ -94,7 +94,7 @@ def add_date_entry():
     return "review does not conform to schema"
 
 @app.route("/update-date", methods=["PUT"])
-def edit_date_entry():
+def update_date():
     """
     Updates a date entry.
 
@@ -125,7 +125,7 @@ def edit_date_entry():
     return f"Documents updated: {str(result.modified_count)}"
 
 @app.route("/remove-date", methods=["DELETE"])
-def remove_date_entry():
+def remove_date():
     """
     Deletes a date entry.
 
@@ -147,8 +147,10 @@ def remove_date_entry():
     result = dates_collection.delete_one(document_to_delete)
     return f"Documents deleted: {str(result.deleted_count)}"
 
+# TODO: Update review rating in date when review is added
+# TODO: Check if user has already left a review before adding new review
 @app.route("/add-review", methods=["PUT"])
-def add_date_review():
+def add_review():
     """
     Adds a review to a specified date entry.
 
@@ -179,7 +181,7 @@ def add_date_review():
                                          {"$push": {"reviews": date_review}})
     return f"Reviews added: {str(result.modified_count)}"
 
-
+# TODO: Update review rating in date when review is updated
 @app.route("/update-review", methods=["PUT"])
 def update_review():
     """
@@ -213,6 +215,7 @@ def update_review():
                                          {"$set": {"reviews.$": date_review}})
     return f"Reviews modified: {str(result.modified_count)}"
 
+# TODO: Update review rating in date when review is deleted
 @app.route("/delete-review", methods=["DELETE"])
 def delete_review():
     """
@@ -240,4 +243,4 @@ def delete_review():
     return f"Reviews deleted: {str(result.modified_count)}"
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5000, debug=True)
