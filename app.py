@@ -27,7 +27,8 @@ def default_route():
 
 @app.route('/get-all', methods=['GET'])
 def get_all_dates():
-    """Gets all date entries.
+    """
+    Gets all date entries.
 
     Returns
     -------
@@ -45,7 +46,8 @@ def get_all_dates():
 
 @app.route('/get-one', methods=['GET'])
 def get_one_reminder():
-    """Gets a date entry.
+    """
+    Gets a date entry.
 
     Query Parameter
     ----------
@@ -66,7 +68,8 @@ def get_one_reminder():
 
 @app.route('/add-date', methods=['POST'])
 def add_date_entry():
-    """Adds a date entry.
+    """
+    Adds a date entry.
 
     Request Body
     ----------
@@ -90,41 +93,10 @@ def add_date_entry():
         return f"_id of inserted document: {result.inserted_id}"
     return "review does not conform to schema"
 
-@app.route('/add-review', methods=['PUT'])
-def add_date_review():
-    """
-    Adds a review to a specified date entry.
-
-    Query Parameters
-    ----------
-    oid: str
-        id_ of date entry to update.
-
-    Request Body
-    ----------
-    application/json
-        JSON object formatted according to the schema
-
-    Returns
-    -------
-    str
-        Number of documents updated.
-    """
-    db = client["dates-in-sg"]
-    dates_collection = db.dates
-
-    oid = request.args.get('oid')
-    date_review = request.get_json()
-    date_review = dict(date_review)
-    date_review["date_added"] = datetime.datetime.now()
-    date_to_review = {"_id": ObjectId(oid),}
-    result = dates_collection.update_one(date_to_review,
-                                         {'$push': {'reviews': date_review}})
-    return f"Reviews added: {str(result.modified_count)}"
-
 @app.route('/update-date', methods=['PUT'])
 def edit_date_entry():
-    """Updates a date entry.
+    """
+    Updates a date entry.
 
     Query Parameters
     ----------
@@ -154,7 +126,8 @@ def edit_date_entry():
 
 @app.route('/remove-date', methods=['DELETE'])
 def remove_date_entry():
-    """Deletes a date entry.
+    """
+    Deletes a date entry.
 
     Query Parameters
     ----------
