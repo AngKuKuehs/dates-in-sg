@@ -30,13 +30,19 @@ Gets all exisitng date entries.
 ## /get-one
 Given an id, returns the corresponding date entry.
 
-## /add
+## /add-date
 Given the id as a query parameter and a JSON HTTP request body formatted according to the Document Schema (w/o a _id), adds a date entry to the collection and returns the value of `_id`.
 
-## /update
+## /add-review
+Given the id as a query parameter and a JSON HTTP request bdy formatted
+
+## /update-date
 Given the id as a query parameter and a JSON HTTP request body formatted according to the Document Schema (w/o a _id), updates the date entry and returns confirmation of the update.
 
-## /remove
+## /update-review
+Given the id and user_id as query parameters and a JSON HTTP request body formatted according to the Document Schema (w/o a _id), updates the date entry and returns confirmation of the update.
+
+## /remove-date
 Given an id, removes the corresponding date entry in the collection.
 
 # Deploying
