@@ -242,5 +242,19 @@ def delete_review():
     result = dates_collection.update_one({"_id": ObjectId(oid)}, review_to_delete)
     return f"Reviews deleted: {str(result.modified_count)}"
 
+def update_review_rating(oid: str):
+    db = client["dates-in-sg"]
+    dates_collection = db.dates
+    select_by_oid = {"$match": {"_id": ObjectId(oid)}}
+    get_average = {"$project": {"avg_rating": {"$avg": "$reviews.rating"}, "_id": 0}}
+    pipeline = [select_by_oid, get_average]
+    cursor = dates_collection.aggregate(pipeline)
+
+    try:
+        res = next(cursor)['avg_rating']
+        return round(res, 1)
+    except:
+        return "no reviews"
+
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
