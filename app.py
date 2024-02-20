@@ -243,6 +243,9 @@ def delete_review():
     return f"Reviews deleted: {str(result.modified_count)}"
 
 def update_review_rating(oid: str):
+    """
+    Given an oid returns the averages of the ratings in all reviews.
+    """
     db = client["dates-in-sg"]
     dates_collection = db.dates
     select_by_oid = {"$match": {"_id": ObjectId(oid)}}
