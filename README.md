@@ -1,5 +1,7 @@
-# dates-in-sg
-A simple CRUD API to track and review dates to go on around the little red dot.
+# where-to-paktor
+*Paktor is a hokkien word meaning to go on a date.*
+
+A CRUD API to track the spots to date around Singapore.
 
 # Document Schema
 ```
