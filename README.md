@@ -9,12 +9,18 @@ A simple CRUD API to track and review dates to go on around the little red dot.
     activity: str
     number_of_reviews: int
     review_rating: float
-    reviews: [{
-        title: str
-        user_id: str
-        date_added: datetime.datetime(tz=datetime.timezone.utc)
-        description: str
-        rating: float}]
+    reviews: [<reviews>]
+}
+```
+
+Review Schema
+```
+{
+    title: str
+    user_id: str
+    date_added: datetime.datetime(tz=datetime.timezone.utc)
+    description: str
+    rating: float
 }
 ```
 Reviews are represented as embedded documents in the database as the use case is such that there are no worries about bloated documents or massive unbounded arrays.
