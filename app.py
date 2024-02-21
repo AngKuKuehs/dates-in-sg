@@ -147,8 +147,6 @@ def remove_date():
     result = dates_collection.delete_one(document_to_delete)
     return f"Documents deleted: {str(result.deleted_count)}"
 
-# TODO: Update review rating in date when review is added
-# TODO: Check if user has already left a review before adding new review
 @app.route("/add-review", methods=["PUT"])
 def add_review():
     """
@@ -175,13 +173,16 @@ def add_review():
     oid = request.args.get("oid")
     date_review = request.get_json()
     date_review = dict(date_review)
+    find_duplicate = dates_collection.find_one({"_id": ObjectId(oid), "reviews.user_id": date_review['user_id']})
+    if find_duplicate:
+        return "Already Reviewed by User", 400
     date_review["date_added"] = datetime.datetime.now()
     date_to_review = {"_id": ObjectId(oid),}
     result = dates_collection.update_one(date_to_review,
                                          {"$push": {"reviews": date_review}})
+    update_date_rating(oid)
     return f"Reviews added: {str(result.modified_count)}"
 
-# TODO: Update review rating in date when review is updated
 @app.route("/update-review", methods=["PUT"])
 def update_review():
     """
@@ -213,9 +214,10 @@ def update_review():
     date_to_review = {"_id": ObjectId(oid), "reviews.user_id": user_id}
     result = dates_collection.update_one(date_to_review,
                                          {"$set": {"reviews.$": date_review}})
+    update_date_rating(oid)
+
     return f"Reviews modified: {str(result.modified_count)}"
 
-# TODO: Update review rating in date when review is deleted
 @app.route("/delete-review", methods=["DELETE"])
 def delete_review():
     """
@@ -240,9 +242,11 @@ def delete_review():
     review_to_delete = {"$pull": {"reviews": {"user_id": user_id}}}
 
     result = dates_collection.update_one({"_id": ObjectId(oid)}, review_to_delete)
+    update_date_rating(oid)
+
     return f"Reviews deleted: {str(result.modified_count)}"
 
-def update_review_rating(oid: str):
+def update_date_rating(oid: str):
     """
     Given an oid returns the averages of the ratings in all reviews.
     """
@@ -254,10 +258,12 @@ def update_review_rating(oid: str):
     cursor = dates_collection.aggregate(pipeline)
 
     try:
-        res = next(cursor)['avg_rating']
-        return round(res, 1)
+        res = next(cursor)["avg_rating"]
+        if type(res) == float:
+            dates_collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": round(res, 1)}})
+
     except:
-        return "no reviews"
+        dates_collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": float(0)}})
 
 if __name__ == "__main__":
     app.run(port=5000, debug=True)
