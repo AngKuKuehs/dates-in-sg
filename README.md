@@ -48,8 +48,11 @@ Given the id as a query parameter and a JSON HTTP request body formatted accordi
 ## /update-review
 Given the id and user_id as query parameters and a JSON HTTP request body formatted according to the Document Schema (w/o a _id), updates the date entry and returns confirmation of the update.
 
-## /remove-date
+## /delete-date
 Given an id, removes the corresponding date entry in the collection.
+
+## /delete-review
+Given an id and a user_id, removes the corresponding review in the collection.
 
 # Deploying
 ## Render

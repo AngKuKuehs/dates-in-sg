@@ -124,7 +124,7 @@ def update_date():
 
     return f"Documents updated: {str(result.modified_count)}"
 
-@app.route("/remove-date", methods=["DELETE"])
+@app.route("/delete-date", methods=["DELETE"])
 def remove_date():
     """
     Deletes a date entry.
