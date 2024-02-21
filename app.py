@@ -266,4 +266,4 @@ def update_date_rating(oid: str):
         dates_collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": float(0)}})
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    app.run()
