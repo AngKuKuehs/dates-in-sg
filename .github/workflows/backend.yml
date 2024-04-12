@@ -34,9 +34,9 @@ jobs:
 
     - name: Install dependencies
       run: |
+        cd server
         poetry install --no-root
 
     - name: Test with pytest
       run: |
-        cd server
         python -m pytest
