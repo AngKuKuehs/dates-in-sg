@@ -1,3 +1,4 @@
+![backend-workflow](https://github.com/AngKuKuehs/where-to-paktor/actions/workflows/backend.yml/badge.svg)
 # where-to-paktor
 *Paktor is a hokkien word meaning to go on a date.*
 
