@@ -84,8 +84,7 @@ def update_date_rating(oid: str, collection):
         res = next(cursor)
         avg_rating = res["avg_rating"]
         num_reviews = res["review_count"]
-        if res:
-            collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": round(avg_rating, 2), "number_of_reviews": num_reviews}})
+        collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": round(avg_rating, 2), "number_of_reviews": num_reviews}})
 
     except:
         # review was just deleted (i.e. no reviews left)

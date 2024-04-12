@@ -9,7 +9,8 @@ from src.models.dates_db import (
     delete_date_in_db,
     add_review_to_db,
     update_review_in_db,
-    delete_review_in_db
+    delete_review_in_db,
+    update_date_rating
 )
 from src.db import get_test_collection
 
@@ -19,6 +20,8 @@ entries = [
         {"_id": ObjectId("60e6368482066d71ee0c59cf"), "location": "Location 1", "activity": "Activity 1", "number_of_reviews": 0, "review_rating": 0, "reviews": []},
         {"_id": ObjectId("60e6368482066d71ee0c59d0"), "location": "Location 2", "activity": "Activity 2", "number_of_reviews": 0, "review_rating": 0, "reviews": []}
     ]
+
+invalid_entry = {"_id": ObjectId("60e6368482066d71ee0c5900"), "no_location": "no_location_1"}
 
 def test_get_all_dates_from_db():
     mock_collection.insert_many(entries)
@@ -35,6 +38,10 @@ def test_add_date_to_db():
                    mock_collection)
     result = get_all_dates_from_db(mock_collection)
     assert len(result) == 3
+
+def test_add_invalid_date_to_db():
+    result = add_date_to_db(invalid_entry, mock_collection)
+    assert result == None
 
 def test_update_date_in_db():
     before = get_one_date_from_db("60e6368482066d71ee0c59df", mock_collection)
@@ -126,3 +133,11 @@ def test_delete_review_in_db():
     assert result["reviews"] == []
     assert result["review_rating"] == 0
 
+def test_update_date_rating_with_no_reviews():
+    date_id = "60e6368482066d71ee0c59d0"
+    update_date_rating(date_id, mock_collection)
+    result = get_one_date_from_db(date_id, mock_collection)
+
+    assert result["number_of_reviews"] == 0
+    assert result["reviews"] == []
+    assert result["review_rating"] == 0
