@@ -6,10 +6,6 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson import json_util, ObjectId
 
-load_dotenv()
-MONGODB_URI = os.environ["MONGODB_URI"]
-client = MongoClient(MONGODB_URI)
-
 def get_all_dates_from_db(collection):
     cursor = collection.find()
     result = []
