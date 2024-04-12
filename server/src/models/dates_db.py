@@ -2,7 +2,7 @@ import os
 import json
 import datetime
 
-from  tenv import load_dotenv
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from bson import json_util, ObjectId
 
