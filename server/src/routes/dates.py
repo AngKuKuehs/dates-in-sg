@@ -1,7 +1,10 @@
 from routes import app
-import models.datesDB as mdb
+import models.dates_db as mdb
+from db import get_collection
 
 from flask import request
+
+collection = get_collection()
 
 @app.route("/get-all", methods=["GET"])
 def get_all_dates():
@@ -13,7 +16,7 @@ def get_all_dates():
     dict
         Details of all date entries.
     """
-    return mdb.get_all_dates_from_db()
+    return mdb.get_all_dates_from_db(collection)
 
 @app.route("/get-one", methods=["GET"])
 def get_one_date():
@@ -31,7 +34,7 @@ def get_one_date():
         Details of date entry.
     """
     oid = request.args.get("oid")
-    return mdb.get_one_date_from_db(oid)
+    return mdb.get_one_date_from_db(oid, collection)
 
 
 @app.route("/add-date", methods=["POST"])
@@ -51,10 +54,9 @@ def add_date():
     str
         Number of documents inserted.
     """
-    
     new_date_entry = request.get_json()
     new_date_entry = dict(new_date_entry)
-    date_entry_resp = mdb.add_date_to_db(new_date_entry)
+    date_entry_resp = mdb.add_date_to_db(new_date_entry, collection)
 
     return date_entry_resp if date_entry_resp else "Does not conform to Schema", 400
 
@@ -82,7 +84,7 @@ def update_date():
     oid = request.args.get("oid")
     updates = request.get_json()
 
-    return mdb.update_date_in_db(oid, updates)
+    return mdb.update_date_in_db(oid, updates, collection)
 
 @app.route("/delete-date", methods=["DELETE"])
 def remove_date():
@@ -100,7 +102,7 @@ def remove_date():
         Number of documents deleted.
     """
     oid = request.args.get("oid") 
-    return mdb.delete_date_in_db(oid)
+    return mdb.delete_date_in_db(oid, collection)
 
 @app.route("/add-review", methods=["PUT"])
 def add_review():  
@@ -126,7 +128,7 @@ def add_review():
     date_review = request.get_json()
     date_review = dict(date_review)
     
-    return mdb.add_review_to_db(oid, date_review)
+    return mdb.add_review_to_db(oid, date_review, collection)
 
 #TODO: review score not updating properly
 @app.route("/update-review", methods=["PUT"])
@@ -152,7 +154,7 @@ def update_review():
     oid = request.args.get("oid")
     user_id = request.args.get("uid")
     date_review = request.get_json()
-    return mdb.update_review_in_db(oid, user_id, date_review)
+    return mdb.update_review_in_db(oid, user_id, date_review, collection)
 
 @app.route("/delete-review", methods=["DELETE"])
 def delete_review():
@@ -173,4 +175,4 @@ def delete_review():
     """
     oid = request.args.get("oid")
     user_id = request.args.get("uid")
-    return mdb.delete_review_in_db(oid, user_id)
+    return mdb.delete_review_in_db(oid, user_id, collection)
