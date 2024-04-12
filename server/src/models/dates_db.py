@@ -44,17 +44,15 @@ def delete_date_in_db(oid, collection):
     return f"Documents deleted: {str(result.deleted_count)}"
 
 def add_review_to_db(oid, date_review, collection):
-    db = client["dates-in-sg"]
-    collection = db.dates
-
     find_duplicate = collection.find_one({"_id": ObjectId(oid), "reviews.user_id": date_review['user_id']})
     if find_duplicate:
         return "Already Reviewed by User", 400
 
     date_review["date_added"] = datetime.datetime.now()
-    date_to_review = {"_id": ObjectId(oid),}
+    date_to_review = {"_id": ObjectId(oid)}
     result = collection.update_one(date_to_review,
                                          {"$push": {"reviews": date_review}})
+    
     update_date_rating(oid, collection)
 
     return f"Reviews added: {str(result.modified_count)}"
@@ -81,14 +79,18 @@ def update_date_rating(oid: str, collection):
     Given an oid returns the averages of the ratings in all reviews.
     """
     select_by_oid = {"$match": {"_id": ObjectId(oid)}}
-    get_average = {"$project": {"avg_rating": {"$avg": "$reviews.rating"}, "_id": 0}}
+    get_average = {"$project": {"avg_rating": {"$avg": "$reviews.rating"}, "review_count": {"$size": "$reviews"}}}
     pipeline = [select_by_oid, get_average]
+
     cursor = collection.aggregate(pipeline)
 
     try:
-        res = next(cursor)["avg_rating"]
-        if type(res) == float:
-            collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": round(res, 1)}})
+        res = next(cursor)
+        avg_rating = res["avg_rating"]
+        num_reviews = res["review_count"]
+        if res:
+            collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": round(avg_rating, 2), "number_of_reviews": num_reviews}})
 
     except:
-        collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": float(0)}})
+        # review was just deleted (i.e. no reviews left)
+        collection.update_one({"_id": ObjectId(oid)}, {"$set": {"review_rating": float(0), "number_of_reviews": 0}})
