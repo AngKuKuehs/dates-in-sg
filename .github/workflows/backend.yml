@@ -39,4 +39,5 @@ jobs:
 
     - name: Test with pytest
       run: |
+        cd server
         poetry run python -m pytest
