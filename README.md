@@ -81,3 +81,9 @@ MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.a1bc2de.mongodb.net/?r
 flask run
 `
 in the CLI in the server/src directory of the project.
+
+- To run tests, enter
+`
+python -m pytest
+`
+in the CLI in the server directory of the project.
