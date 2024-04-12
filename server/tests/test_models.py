@@ -87,7 +87,13 @@ def test_add_review_to_db():
     print(result)
     assert len(result["reviews"]) == 2
     assert result["review_rating"] == 2.5
-   
+
+def test_add_duplicate_review():
+    date_id = "60e6368482066d71ee0c59cf"
+    add_review_to_db(date_id, review_1_1, mock_collection)
+    result = get_one_date_from_db(date_id, mock_collection)
+    assert len(result["reviews"]) == 2
+
 def test_update_review_in_db():
     date_id = "60e6368482066d71ee0c59cf"
     result = get_one_date_from_db(date_id, mock_collection)
