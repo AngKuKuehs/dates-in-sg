@@ -78,6 +78,12 @@ MONGODB_URI="mongodb+srv://<username>:<password>@cluster0.a1bc2de.mongodb.net/?r
 
 - To run locally, enter
 `
-poetry run flask run
+flask run
 `
-in the CLI in the root directory of the project.
+in the CLI in the server/src directory of the project.
+
+- To run tests, enter
+`
+python -m pytest
+`
+in the CLI in the server directory of the project.
