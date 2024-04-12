@@ -5,9 +5,9 @@ name: Backend Actions
 
 on:
   push:
-    branches: [ "fullstack" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "fullstack" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
