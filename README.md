@@ -69,6 +69,20 @@ Given an id and a user_id, removes the corresponding review in the collection.
 
 After these steps, you should be able to send requests to the API.
 
+## Locally
+From the server/src directory run the following from the CLI:
+```
+poetry run flask run
+```
+
+To run with docker, from the root directory run the following from the CLI:
+```
+docker build -t name-of-image -f Dockerfile.server .
+docker run -d -p 5001:5000 -e MONGODB_URI='mongodb-connstring' name-of-image
+```
+
+The application will be acessible from localhost:5001
+
 # Notes
 - MongoDB connection string must be added as an environmental variable before deployment.
 
